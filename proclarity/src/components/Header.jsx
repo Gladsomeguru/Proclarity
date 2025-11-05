@@ -20,7 +20,7 @@ const Header = ({isOpen,setIsOpen}) => {
         <>
             <header className="header bg-emerald-50 w-[full-8px] m-2 md:ms-0 mb-0 rounded-lg shadow-lg flex justify-between items-center p-4 h-16 text-slate-600 dark:bg-slate-800 dark:text-emerald-100" >
                 <button className="md:hidden" onClick={()=>setIsOpen(!isOpen)}><FaBars className="text-xl"/></button>
-                <h1 className="text-xl font-semibold mb-0 mx-auto">Dashboard</h1>
+                <h1 className="text-xl font-semibold mb-0">Dashboard</h1>
                 <div className="flex gap-4 items-center">
                     <input type="text" placeholder="Search" className="hidden md:inline border border-emerald-400 rounded-full px-4 py-1 w-64 focus:outline-none focus:ring-0" />
                     <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full bg-emerald-500 text-white hover:bg-emerald-600 transition-colors cursor-pointer">{darkMode ? <FaSun /> : <FaMoon />}</button>
