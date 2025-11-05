@@ -4,7 +4,7 @@ import Main from "./Main";
 
 const Viewport = ({isOpen, setIsOpen}) => {
     return (
-        <div className="viewport md:col-span-10 col-span-12 flex flex-col"> 
+        <div className="viewport lg:col-span-10 col-span-12 flex flex-col h-full overflow-hidden"> 
             <Header setIsOpen={setIsOpen} isOpen={isOpen}/>
             <Main/>
         </div>
