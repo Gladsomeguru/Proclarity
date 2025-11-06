@@ -24,14 +24,6 @@ const TaskManager = ({ tasks, setTasks, setOpenModal }) => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        if (name === "dueDate") {
-            const selectedDate = new Date(value);
-            const formattedDate = selectedDate
-                .toLocaleDateString('en-US', {  day: '2-digit', month: 'short'})
-                .replace(',', '');
-            setTaskInput({ ...taskInput, [name]: formattedDate });
-            return;
-        }
         setTaskInput({ ...taskInput, [name]: value });
     }
 
