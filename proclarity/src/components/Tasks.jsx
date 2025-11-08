@@ -7,12 +7,24 @@ import { CiFilter, CiSearch } from "react-icons/ci";
 const Tasks = ({ tasks, setTasks, editingTask, setEditingTask, setOpenModal, openModal }) => {
     const [showMenu, setShowMenu] = useState(false);
     const [selectedTaskId, setSelectedTaskId] = useState(null);
+    const [showFilterMenu, setShowFilterMenu] = useState(false);
+    const [filterOptions, setFilterOptions] = useState({
+        all: true,
+        pending: false,
+        inProgress: false,
+        completed: false
+    });
+    const [filterApplied, setFilterApplied] = useState(false);
+
+    const [allTasks, setAllTasks] = useState([]);
+
 
     useEffect(() => {
         const handleClickOutside = (e) => {
             if (!e.target.closest(".menu-button") && !e.target.closest(".menu-dropdown")) {
                 setShowMenu(false);
                 setSelectedTaskId(null);
+                setShowFilterMenu(false);
             }
         };
 
@@ -20,9 +32,19 @@ const Tasks = ({ tasks, setTasks, editingTask, setEditingTask, setOpenModal, ope
         return () => document.removeEventListener("click", handleClickOutside);
     }, []);
 
+
+
+    useEffect(() => {
+        setAllTasks(tasks);
+    }, [tasks]);
+
     const toggleMenu = (id) => {
         setSelectedTaskId(id);
         setShowMenu(!showMenu);
+    }
+
+    const toggleFilterMenu = () => {
+        setShowFilterMenu(!showFilterMenu);
     }
 
     const deleteTask = (id) => {
@@ -34,6 +56,28 @@ const Tasks = ({ tasks, setTasks, editingTask, setEditingTask, setOpenModal, ope
         const taskToEdit = tasks.find(task => task.id === id);
         setEditingTask(taskToEdit);
     }
+
+    const handleChange = (e) => {
+        const { name, checked } = e.target;
+        setFilterOptions({ ...filterOptions, all: false, pending: false, inProgress: false, completed: false, [name]: checked });
+        filterTasks();
+        if(name === "all") {
+            setFilterApplied(false);
+        } else {
+            setFilterApplied(true);
+        }
+    }
+
+    const filterTasks = () => {
+        const filteredTasks = tasks.filter(task => {
+            if (filterOptions.all) return true;
+            if (task.status === "Pending" && filterOptions.pending) return true;
+            if (task.status === "In Progress" && filterOptions.inProgress) return true;
+            if (task.status === "Completed" && filterOptions.completed) return true;
+            return false;
+        });
+        setAllTasks(filteredTasks);
+    };
 
     const addTaskButton = (
         <button
@@ -53,34 +97,63 @@ const Tasks = ({ tasks, setTasks, editingTask, setEditingTask, setOpenModal, ope
         <>
             <div className="flex items-center px-4 lg:gap-2 gap-4 flex-wrap lg:mb-0 mb-4">
                 {!openModal && tasks.length !== 0 && !editingTask && (
-                    <div className="hidden lg:visible">{addTaskButton}</div>
+                    <div className="hidden lg:block">{addTaskButton}</div>
                 )}
                 <div className="flex gap-2 lg:ms-auto flex-wrap w-full lg:w-auto">
-                    <form className="ms-auto text-gray-800 flex grow items-center gap-1 dark:text-emerald-100 cursor-pointer p-2 py-1 border border-emerald-300 outline-emerald-300 rounded-lg focus-within:outline-2 dark:border-slate-600 dark:outline-slate-600 box-border">
+                    <form className="ms-auto text-gray-800 bg-white dark:bg-slate-800 flex grow items-center gap-1 dark:text-emerald-100 cursor-pointer p-2 py-1 border border-emerald-300 outline-emerald-300 rounded-lg focus-within:outline-2 dark:border-slate-600 dark:outline-slate-600 box-border">
                         <input type="text" placeholder="Search tasks..." className="w-full focus:outline-none" /><CiSearch />
                     </form>
-                    <p className="ms-auto text-gray-800 flex items-center gap-1 dark:text-emerald-100 cursor-pointer p-2 py-1 border border-emerald-300 rounded-lg outline-emerald-300 hover:outline-2 dark:border-slate-600 dark:outline-slate-600 box-border">
-                        <CiFilter />
-                        <span>Filter</span>
-                    </p>
-                </div>
+                    <div className="relative">
+                        <button className="menu-button ms-auto text-gray-800 bg-white dark:bg-slate-800 flex items-center gap-1 dark:text-emerald-100 
+                        cursor-pointer p-2 py-1 border border-emerald-300 rounded-lg outline-emerald-300 hover:outline-2 
+                        dark:border-slate-600 dark:outline-slate-600 box-border"
+                            onClick={toggleFilterMenu}>
+                            <CiFilter />
+                            <span>Filter</span>
+                        </button>
+                        {showFilterMenu && <form className="menu-dropdown absolute right-0 top-full mt-2 w-max bg-white shadow-md rounded-lg border border-emerald-300 z-10 overflow-hidden dark:bg-slate-800 dark:border-slate-600">
+                            <ul className="text-sm text-slate-700 dark:text-emerald-100">
+                                <li className="px-4 py-2 hover:bg-gray-100 flex items-center dark:hover:bg-slate-600 cursor-pointer"
+                                    onClick={() => handleChange({ target: { name: "all", checked: true } })}>
+                                    <input type="radio" id="all" name="status" className="me-2 pointer-events-none dark:[color-scheme:dark]" checked={filterOptions.all} onChange={() => {return}} />
+                                    <label htmlFor="all" className="cursor-pointer select-none">All</label>
+                                </li>
+                                <li className="px-4 py-2 hover:bg-gray-100 flex items-center dark:hover:bg-slate-600 cursor-pointer"
+                                    onClick={() => handleChange({ target: { name: "pending", checked: true } })}>
+                                    <input type="radio" id="pending" name="status" className="me-2 pointer-events-none dark:[color-scheme:dark]" checked={filterOptions.pending} onChange={() => {return}} />
+                                    <label htmlFor="pending" className="cursor-pointer select-none">Pending</label>
+                                </li>
+                                <li className="px-4 py-2 hover:bg-gray-100 flex dark:hover:bg-slate-600 cursor-pointer"
+                                    onClick={() => handleChange({ target: { name: "inProgress", checked: true } })}>
+                                    <input type="radio" id="in-progress" name="status" className="me-2 cursor-pointer bg-white   dark:[color-scheme:dark]" checked={filterOptions.inProgress} onChange={() => {return}} />
+                                    <label htmlFor="in-progress" className="cursor-pointer">In Progress</label>
+                                </li>
+                                <li className="px-4 py-2 hover:bg-gray-100 flex dark:hover:bg-slate-600 cursor-pointer"
+                                    onClick={() => handleChange({ target: { name: "completed", checked: true } })}>
+                                    <input type="radio" id="completed" name="status" className="me-2 cursor-pointer dark:[color-scheme:dark]" checked={filterOptions.completed} onChange={() => {return}} />
+                                    <label htmlFor="completed" className="cursor-pointer">Completed</label>
+                                </li>
+                            </ul>
+                        </form>}
 
+                    </div>
+                </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:max-h-[calc(100%-34px)] max-h-[calc(100%-98px)] 
             p-4 lg:py-4 py-0 overflow-y-auto">
-                {tasks.map((task) => (
-                    <div key={task.id} className={`rounded-lg w-full max-w-md bg-white dark:bg-slate-900 shadow-md border-0 border-r-6 w-full lg:1/5 hover:scale-[1.04] hover:shadow-lg transition-all ease-in-out duration-300
+                {allTasks.map((task) => (
+                    <div key={task.id} className={`rounded-lg w-full max-w-md bg-white dark:bg-slate-900 shadow-md border-0 border-r-6 w-full lg:1/5
                 ${task.status === "Completed" ? "border-green-500 dark:border-green-800" : task.status === "In Progress" ? "border-yellow-300 dark:border-yellow-300" : "border-red-500 dark:border-red-800"}`}>
                         <div className="flex flex-col gap-2 rounded-lg p-4 h-full">
-                            <div className=" flex flex-row gap-2 items-center">
-                                <h2 className="text-lg font-semibold mb-0 text-gray-700 dark:text-gray-300 rounded-lg">{task.title}</h2>
-                                <p className="text-sm font-medium text-gray-500 dark:text-gray-400 cursor-default" title={`Priority: ${task.priority} `}>&bull; {task.priority}</p>
-                                <div className="relative flex items-center ms-auto">
-                                    <button onClick={(e) => { e.stopPropagation(); toggleMenu(task.id) }} className="menu-button ms-auto cursor-pointer text-emerald-600 dark:text-slate-400 " >
+                            <div className=" flex flex-row gap-2 items-end">
+                                <h2 className="text-lg font-semibold w-fit mb-0 text-gray-700 dark:text-slate-300 rounded-lg">{task.title}</h2>
+                                <p className="text-sm font-medium text-gray-500 dark:text-slate-400 cursor-default text-nowrap" title={`Priority: ${task.priority} `}>&bull; {task.priority}</p>
+                                <div className="relative flex items-center ms-auto mb-auto mt-2">
+                                    <button onClick={(e) => { e.stopPropagation(); toggleMenu(task.id) }} className="menu-button ms-auto cursor-pointer text-emerald-600 dark:text-slate-400" >
                                         <FaEllipsisV />
                                     </button>
                                     {showMenu && selectedTaskId == task.id && (
-                                        <div className="menu-dropdown absolute right-0 top-full mt-2 w-32 bg-white shadow-md rounded-lg border border-gray-200 z-10 overflow-hidden dark:bg-slate-800 dark:border-slate-700">
+                                        <div className="menu-dropdown absolute right-0 top-full mt-2 w-32 bg-white shadow-md rounded-lg border border-emerald-300 z-10 overflow-hidden dark:bg-slate-800 dark:border-slate-600">
                                             <ul className="text-sm text-slate-700 dark:text-emerald-100">
                                                 <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-slate-600 cursor-pointer"
                                                     onClick={() => { setShowMenu(false); editTask(task.id); }}>
@@ -99,7 +172,7 @@ const Tasks = ({ tasks, setTasks, editingTask, setEditingTask, setOpenModal, ope
                                 </div>
                             </div>
                             <p className="text-sm text-emerald-800 dark:text-slate-400 mb-2">{task.description}</p>
-                            <div className="flex flex-row gap-2 mt-auto">
+                            <div className="flex flex-row gap-2 mt-auto justify-between">
                                 <div className="flex flex-row gap-1 items-center bg-gray-100 dark:bg-slate-700 p-2 py-1 rounded-lg text-gray-800 dark:text-slate-300 cursor-default" title={`Due Date: ${task.dueDate ? new Date(task.dueDate)
                                     .toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })
                                     .replace(',', '') : 'No due date'}`}>
@@ -111,7 +184,7 @@ const Tasks = ({ tasks, setTasks, editingTask, setEditingTask, setOpenModal, ope
                                         : 'No due date'}</p>
                                 </div>
                                 <div className={`flex flex-row flex-wrap gap-1 items-center p-2 py-1 rounded-lg text-black cursor-default
-                                    ${task.status === "Completed" ? "bg-green-500 dark:bg-green-700 text-white dark:text-gray-100" : task.status === "In Progress" ?
+                                    ${task.status === "Completed" ? "bg-green-500 dark:bg-green-700 text-white dark:text-white" : task.status === "In Progress" ?
                                         "bg-yellow-300 dark:bg-yellow-300" :
                                         "text-white bg-red-500 dark:bg-red-800 dark:text-black dark:text-white"}`} title={`Status: ${task.status}`}>
                                     <p className="text-xs font-medium text-nowrap">{task.status}</p>
@@ -121,59 +194,16 @@ const Tasks = ({ tasks, setTasks, editingTask, setEditingTask, setOpenModal, ope
                     </div>
                 ))
                 }
+                {filterApplied && allTasks.length === 0 && (
+                    <p className="text-center text-gray-500 dark:text-gray-400 col-span-full">No tasks match the selected filter.</p>
+                )}
+                {!filterApplied && allTasks.length === 0 && (
+                    <p className="text-center text-gray-500 dark:text-gray-400 col-span-full">No tasks available. Please add a task.</p>
+                )}
             </div>
             <div className="lg:hidden flex justify-center m-4 mb-0">{!openModal && tasks.length !== 0 && !editingTask && addTaskButton}</div>
-
         </>
     )
 }
 
 export default Tasks;
-
-
-
-// <div key={task.id} className="rounded-lg w-full max-w-md border border-emerald-200 bg-white shadow-md dark:bg-slate-900 dark:border-slate-700">
-//     <div className="flex flex-row gap-2 m-4 pb-4 border-b border-slate-300 dark:border-slate-700">
-//         <p className="mb-0 bg-teal-800 w-fit p-1 px-3 rounded-lg text-sm font-medium">
-//             {task.priority}
-//         </p>
-//         <p className="mb-0 bg-emerald-800 w-fit p-1 px-3 rounded-lg text-sm">
-//             {task.status}
-//         </p>
-//         <div className="relative flex items-center ms-auto">
-//             <button onClick={() => toggleMenu(task.id)} className="menu-button ms-auto cursor-pointer text-emerald-700 dark:text-slate-400 " >
-//                 <FaEllipsisV />
-//             </button>
-//             {showMenu && selectedTaskId == task.id && (
-//                 <div className="menu-dropdown absolute right-0 top-full mt-2 w-32 bg-white shadow-md rounded-lg border border-gray-200 z-10 overflow-hidden dark:bg-slate-800 dark:border-slate-700">
-//                     <ul className="text-sm text-slate-700 dark:text-emerald-100">
-//                         <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-slate-600 cursor-pointer"
-//                             onClick={() => { setShowMenu(false); editTask(task.id); }}>
-//                             Edit
-//                         </li>
-//                         <li className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-slate-600 cursor-pointer"
-//                             onClick={() => {
-//                                 deleteTask(task.id);
-//                                 setShowMenu(false);
-//                             }}>
-//                             Delete
-//                         </li>
-//                     </ul>
-//                 </div>
-//             )}
-//         </div>
-//     </div>
-
-//     <div className="flex flex-col gap-2 rounded-lg p-4 pt-0">
-//         <h2 className="text-md font-semibold mb-0 text-emerald-800 dark:text-slate-200">{task.title}</h2>
-//         <p className="text-sm text-emerald-800 dark:text-slate-400 mb-0">{task.description}</p>
-//         <div className="flex flex-row gap-1 items-center me-auto text-emerald-700 bg-emerald-100 dark:bg-slate-800  p-2 rounded-lg dark:text-slate-400" title="Due Date">
-//             <FaRegCalendar />
-//             <p className="text-sm font-medium">{task.dueDate
-//                 ? new Date(task.dueDate)
-//                     .toLocaleDateString('en-US', { month: 'short', day: '2-digit' })
-//                     .replace(',', '')
-//                 : 'No due date'}</p>
-//         </div>
-//     </div>
-// </div>

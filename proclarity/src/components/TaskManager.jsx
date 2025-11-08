@@ -77,7 +77,7 @@ const TaskManager = ({ tasks, setTasks, setOpenModal, editingTask, setEditingTas
                 </div>
                 <div className="flex flex-col gap-2">
                     <label htmlFor="title">Title <span className="text-red-800">*</span></label>
-                    <input type="text" name="title" id="title" value={taskInput.title} onChange={handleChange} required className="border border-slate-500 rounded-lg p-2 bg-gray-50 dark:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500" />
+                    <input type="text" name="title" id="title" value={taskInput.title} autoComplete="true" onChange={handleChange} required className="border border-slate-500 rounded-lg p-2 bg-gray-50 dark:bg-slate-800 focus:outline-none focus:ring-1 focus:ring-emerald-500" />
                 </div>
                 <div className="flex flex-col gap-2">
                     <label htmlFor="description">Description</label>
