@@ -9,9 +9,9 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     const [active, setActive] = useState("dashboard");
 
     const navItems = [
-        { id: "dashboard", name: "Dashboard", icon: <FaHome />, onClick: () => {navigate('dashboard'); setIsOpen(false); } },
-        { id: "tasks", name: "Tasks", icon: <FaTasks />, onClick: () => {navigate('tasks'); setIsOpen(false); } },
-        { id: "analytics", name: "Analytics", icon: <FaChartBar /> },
+        { id: "dashboard", name: "Dashboard", icon: <FaHome />, onClick: () => { navigate('dashboard'); setIsOpen(false); } },
+        { id: "tasks", name: "Tasks", icon: <FaTasks />, onClick: () => { navigate('tasks'); setIsOpen(false); } },
+        // { id: "analytics", name: "Analytics", icon: <FaChartBar /> },
     ]
 
     return (
@@ -33,8 +33,11 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
                 ))}
             </nav>
             <div className="pt-4 mt-auto">
-                <a href="#" className="flex items-center gap-2 p-2 px-4 mx-4 rounded-lg hover:bg-gray-300 hover:text-slate-700 transition-colors duration-200"><FaUser /> Profile</a>
-                <a href="#" className="flex items-center gap-2 p-2 px-4 mx-4 mb-4 rounded-lg hover:bg-gray-300 hover:text-slate-700 transition-colors duration-200"><FaSignOutAlt /> Logout</a>
+                {/* <a href="#" className="flex items-center gap-2 p-2 px-4 mx-4 rounded-lg hover:bg-gray-300 hover:text-slate-700 transition-colors duration-200"><FaUser /> Profile</a>
+                <a href="#" className="flex items-center gap-2 p-2 px-4 mx-4 mb-4 rounded-lg hover:bg-gray-300 hover:text-slate-700 transition-colors duration-200"><FaSignOutAlt /> Logout</a> */}
+                <a href="https://portfolio-gurunathan.vercel.app/" target='blank' className="flex items-center gap-2 p-2 px-4 mx-4 mb-4 rounded-lg hover:bg-gray-300 hover:text-slate-700 transition-colors duration-200">                    
+                    <img src="./images/user.jpg" alt="user" className="header-user rounded-full w-8 h-8 border-4" />
+                    <span className='font-medium '>Gurunathan</span></a>
             </div>
         </div>
     )

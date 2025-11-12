@@ -42,23 +42,23 @@ const Dashboard = () => {
             <Header setIsOpen={setIsOpen} isOpen={isOpen} currentPage="Dashboard" />
             <div className="main col-span-10 p-4 rounded-lg shadow-lg m-2 lg:ms-0 max-h-[calc(100vh-88px)] bg-emerald-50 dark:bg-slate-800 
             dark:text-emerald-100 overflow-y-auto">
-                <div className='grid lg:grid-cols-4 grid-cols-2 gap-4 lg:grid-rows-[auto_1fr] h-[calc(100vh-120px)]'>
-                    <div className='bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md border-r-6 border-gray-500 dark:border-gray-300'>
+                <div className='grid lg:grid-cols-4 grid-cols-2 gap-4 lg:grid-rows-[auto_1fr] lg:h-[calc(100vh-120px)]'>
+                    <div className='flex flex-col bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md border-r-6 border-gray-500 dark:border-gray-300'>
                         <h2 className='text-lg text-gray-700 dark:text-slate-300 font-semibold'>Total Tasks</h2>
-                        <div className='text-4xl text-end font-medium text-gray-800 dark:text-slate-100'>
+                        <div className='text-4xl text-end font-medium text-gray-800 dark:text-slate-100 mt-auto'>
                             {tasks.length}</div>
                     </div>
-                    <div className='bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md border-r-6 border-red-500 dark:border-red-800'>
+                    <div className='flex flex-col bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md border-r-6 border-red-500 dark:border-red-800'>
                         <h2 className='text-lg text-gray-700 dark:text-slate-300 font-semibold'>Pending</h2>
-                        <div className='text-4xl text-end font-medium text-gray-800 dark:text-slate-100'>{pendingTasks.length}</div>
+                        <div className='text-4xl text-end font-medium text-gray-800 dark:text-slate-100 mt-auto'>{pendingTasks.length}</div>
                     </div>
-                    <div className='bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md border-r-6 border-yellow-300'>
+                    <div className='flex flex-col bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md border-r-6 border-yellow-300'>
                         <h2 className='text-lg text-gray-700 dark:text-slate-300 font-semibold'>In Progress</h2>
-                        <div className='text-4xl text-end font-medium text-gray-800 dark:text-slate-100'>{inProgressTasks.length}</div>
+                        <div className='text-4xl text-end font-medium text-gray-800 dark:text-slate-100 mt-auto'>{inProgressTasks.length}</div>
                     </div>
-                    <div className='bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md border-r-6 border-green-500 dark:border-green-800'>
+                    <div className='flex flex-col bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md border-r-6 border-green-500 dark:border-green-800'>
                         <h2 className='text-lg text-gray-700 dark:text-slate-300 font-semibold'>Completed</h2>
-                        <div className='text-4xl text-end font-medium text-gray-800 dark:text-slate-100'>{completedTasks.length}</div>
+                        <div className='text-4xl text-end font-medium text-gray-800 dark:text-slate-100 mt-auto'>{completedTasks.length}</div>
                     </div>
                     <div className='bg-white dark:bg-slate-900 p-4 rounded-lg shadow-md col-span-2
                     overflow-y-hidden min-h-fit flex flex-col'>

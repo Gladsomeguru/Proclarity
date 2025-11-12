@@ -23,8 +23,8 @@ const Header = ({ isOpen, setIsOpen, currentPage }) => {
                 <h1 className="text-xl font-semibold mb-0">{currentPage}</h1>
                 <div className="flex gap-4 items-center">
                     <button onClick={() => setDarkMode(!darkMode)} className="text-xl text-emerald-500 hover:text-emerald-400 transition-colors cursor-pointer dark:text-emerald-300">{darkMode ? <FaSun /> : <FaMoon />}</button>
-                    <h4 className="mb-0 font-medium hidden lg:block">Gladdy</h4>
-                    <img src="./images/user.jpg" alt="user" className="header-user rounded-full w-8 h-8 mt-1" />
+                    {/* <h4 className="mb-0 font-medium hidden lg:block">Gladdy</h4>
+                    <img src="./images/user.jpg" alt="user" className="header-user rounded-full w-8 h-8 mt-1" /> */}
                 </div>
             </header>
         </>
